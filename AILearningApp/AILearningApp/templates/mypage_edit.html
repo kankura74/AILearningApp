@@ -1,0 +1,165 @@
+{% extends "layout_private.html" %}
+
+{% block content %}
+<!-- Alpine.js でタブ切り替えと画像プレビューを同時に管理 -->
+<div x-data="{ 
+    activeTab: 'profile',
+    imageUrl: '{{ " /static/uploads/" + current_user.icon_filename if current_user.icon_filename else url_for("static",
+    filename="images/default.png" ) }}', fileChosen(event) { const file=event.target.files[0]; if (!file) return; const
+    reader=new FileReader(); reader.onload=(e)=> { this.imageUrl = e.target.result; };
+    reader.readAsDataURL(file);
+    }
+    }" class="max-w-6xl mx-auto my-10 px-4 space-y-8">
+
+    <!-- ダッシュボードへ戻るボタン -->
+
+
+    <!-- 2. 下部：2カラムレイアウト（サイドバー + メインコンテンツ） -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 items-start relative">
+
+        <a href="{{ url_for('mypage') }}"
+            class="absolute -top-12 left-0 text-md font-bold border border-white/40 px-3 py-2 rounded hover:bg-white/10 transition-colors">
+            &lt; ダッシュボードへ戻る
+        </a>
+
+        <!-- 左側：サイドバーメニュー -->
+        <div class="md:col-span-1  overflow-hidden flex flex-col gap-1">
+            <!-- 基本設定タブ -->
+            <button @click="activeTab = 'profile'"
+                :class="activeTab === 'profile' ? 'bg-stone-900 text-white' : 'bg-white text-stone-900 hover:bg-stone-50'"
+                class="rounded-sm w-full md:text-left px-5 py-3.5 text-sm font-black uppercase tracking-wide transition-colors">
+                基本設定
+            </button>
+            <!-- パスワードの変更タブ -->
+            <button @click="activeTab = 'password'"
+                :class="activeTab === 'password' ? 'bg-stone-900 text-white' : 'bg-white text-stone-900 hover:bg-stone-50'"
+                class="rounded-sm w-full md:text-left px-5 py-3.5 text-sm font-black uppercase tracking-wide transition-colors">
+                パスワードの変更
+            </button>
+            <!-- アカウントの削除タブ -->
+            <button @click="activeTab = 'delete'"
+                :class="activeTab === 'delete' ? 'bg-stone-500 text-white' : 'bg-white text-stone-900 hover:bg-stone-50'"
+                class="rounded-sm w-full md:text-left px-5 py-3.5 text-sm font-black uppercase tracking-wide transition-colors">
+                アカウントの削除
+            </button>
+        </div>
+
+        <!-- 右側：メインコンテンツ表示エリア -->
+        <div class="md:col-span-3 bg-white border-2 border-stone-900 rounded-md p-6 md:p-8">
+
+            <!-- 【コンテンツA】基本設定 -->
+            <div x-show="activeTab === 'profile'" class="space-y-6">
+                <h2 class="text-lg font-black text-stone-900 uppercase tracking-wide border-b-2 border-stone-900 pb-2">
+                    基本設定</h2>
+
+                <form method="post" enctype="multipart/form-data" class="space-y-6">
+
+                    <!-- アイコン選択（画像の横並び配置に調整） -->
+                    <div class="grid grid-cols-1 sm:grid-cols-4 items-center gap-2 sm:gap-4 pt-6">
+
+                        <label class="sm:col-span-1 text-xs font-black text-stone-500 uppercase tracking-wide">
+                            アイコン
+                        </label>
+
+                        <div class="sm:col-span-3 flex items-center gap-4">
+
+                            <!-- プレビュー画像 -->
+                            <img :src="imageUrl"
+                                src="{% if current_user.icon_filename %}/static/uploads/{{ current_user.icon_filename }}{% else %}/static/images/default.png{% endif %}"
+                                class="w-14 h-14 rounded-full object-cover border-2 border-stone-900 bg-stone-50"
+                                alt="ユーザーアイコン">
+
+                            <!-- ファイル選択 -->
+                            <label
+                                class="cursor-pointer inline-flex items-center justify-center px-3 py-1.5 text-xs font-bold text-stone-900 bg-white border border-stone-900 rounded hover:bg-stone-100 transition-colors">
+                                <span>画像を選択</span>
+                                <input type="file" name="icon" accept="image/*" @change="fileChosen" class="hidden">
+                            </label>
+
+                        </div>
+                    </div>
+
+                    <!-- 名前（ユーザー名） -->
+                    <div class="grid grid-cols-1 sm:grid-cols-4 items-center gap-2 sm:gap-4">
+                        <label
+                            class="sm:col-span-1 text-xs font-black text-stone-500 uppercase tracking-wide">名前</label>
+                        <div class="sm:col-span-3">
+                            <input type="text" name="user_name" value="{{ current_user.user_name }}" required
+                                class="w-full px-3 py-2 text-sm bg-white border border-stone-900 rounded font-medium text-stone-900 focus:outline-none focus:bg-stone-50/50 transition-colors">
+                        </div>
+                    </div>
+
+                    <!-- メールアドレス -->
+                    <div
+                        class="grid grid-cols-1 sm:grid-cols-4 items-center gap-2 sm:gap-4 border-t border-stone-200 pt-6">
+                        <label
+                            class="sm:col-span-1 text-xs font-black text-stone-500 uppercase tracking-wide">メールアドレス</label>
+                        <div class="sm:col-span-3">
+                            <input type="email" name="email" value="{{ current_user.email }}" required
+                                class="w-full px-3 py-2 text-sm bg-white border border-stone-900 rounded font-medium text-stone-900 focus:outline-none focus:bg-stone-50/50 transition-colors">
+                        </div>
+                    </div>
+
+                    <!-- 更新ボタン -->
+                    <div class="pt-4 border-t border-stone-200 flex justify-end">
+                        <button type="submit"
+                            class="px-6 py-2.5 text-sm font-black tracking-wide text-white rounded bg-stone-900 hover:bg-stone-800 transition-colors">
+                            更新
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 【コンテンツB】パスワードの変更 -->
+            <div x-show="activeTab === 'password'" x-cloak class="space-y-6">
+                <h2 class="text-lg font-black text-stone-900 uppercase tracking-wide border-b-2 border-stone-900 pb-2">
+                    パスワードの変更</h2>
+
+                <form method="post" action="/update-password" class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-4 items-center gap-2 sm:gap-4">
+                        <label
+                            class="sm:col-span-1 text-xs font-black text-stone-500 uppercase tracking-wide">現在のパスワード</label>
+                        <div class="sm:col-span-3">
+                            <input type="password" name="current_password" required
+                                class="w-full px-3 py-2 text-sm bg-white border border-stone-900 rounded focus:outline-none">
+                        </div>
+                    </div>
+                    <div
+                        class="grid grid-cols-1 sm:grid-cols-4 items-center gap-2 sm:gap-4 border-t border-stone-200 pt-6">
+                        <label
+                            class="sm:col-span-1 text-xs font-black text-stone-500 uppercase tracking-wide">新しいパスワード</label>
+                        <div class="sm:col-span-3">
+                            <input type="password" name="new_password" required
+                                class="w-full px-3 py-2 text-sm bg-white border border-stone-900 rounded focus:outline-none">
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-stone-200 flex justify-end">
+                        <button type="submit"
+                            class="px-6 py-2.5 text-sm font-black tracking-wide text-white rounded bg-stone-900 hover:bg-stone-800 transition-colors">
+                            変更を保存
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 【コンテンツC】アカウントの削除 -->
+            <div x-show="activeTab === 'delete'" x-cloak class="space-y-6">
+                <h2 class="text-lg font-black text-stone-900 uppercase tracking-wide border-b-2 border-stone-900 pb-2">
+                    アカウントの削除</h2>
+
+                <div class=" border border-stone-900 rounded p-4 text-xs font-bold text-rose-700 leading-relaxed">
+                    ⚠ アカウントを削除すると、これまでの学習データや統計レポートを含むすべての情報が完全に消去され、元に戻すことはできません。
+                </div>
+
+                <form method="post" action="/delete-account" class="pt-4 flex justify-end">
+                    <button type="submit" onclick="return confirm('本当にアカウントを削除しますか？')"
+                        class="px-6 py-2.5 text-sm font-black tracking-wide text-white rounded bg-rose-600 hover:bg-rose-700 transition-colors">
+                        アカウントを完全に削除
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

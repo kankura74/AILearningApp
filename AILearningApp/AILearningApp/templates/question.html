@@ -1,0 +1,168 @@
+{% extends "layout_private.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto my-10 px-4">
+
+    <!-- 左右2カラムレイアウト（PCでは横並び、スマホでは縦並び） -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+
+        <!-- 左側：問題内容エリア -->
+        <div class="space-y-6">
+            <!-- タイトルとメタ情報 -->
+            <div class="space-y-4">
+                <!-- 問題番号とタイトルの組み合わせ -->
+                <div class="flex flex-col sm:flex-row sm:items-baseline gap-2">
+
+
+
+                    <h1 class="text-3xl font-extrabold text-stone-900 tracking-tight">
+                        No.{{ row[0] }}　{{ row[1] }}
+                    </h1>
+                </div>
+
+                <!-- メタ情報 -->
+                <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-stone-600 font-medium">
+                    <div>
+                        <span class="font-bold text-stone-900">カテゴリ：</span>{{ row[3] }}
+                    </div>
+                    <div>
+                        <span class="font-bold text-stone-900">難易度：</span>{{ row[4] }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- 区切り線 -->
+            <hr class="border-t-2 border-stone-900">
+
+            <!-- 問題文の見出し（hから正しい見出しタグのh2に修正して装飾） -->
+            <div class="space-y-3">
+                <h2 class="text-lg font-black text-stone-900 tracking-wide  border-stone-900 pb-1 inline-block">
+                    問題文
+                </h2>
+
+                <!-- 問題文本文 -->
+                <div class="text-stone-800 leading-relaxed whitespace-pre-wrap text-base">
+                    {{ row[2] }}
+                </div>
+            </div>
+        </div>
+
+        <!-- 右側：コード記述欄エリア -->
+        <div class="w-full">
+            <form method="post" class="space-y-4">
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-bold text-stone-900 tracking-wide">回答コード</label>
+
+                    <!-- モナコエディタのコンテナ（くっきり枠線と立体的な影で統一） -->
+                    <div class="bg-[#1e1e1e]  rounded-xl overflow-hidden  p-4">
+                        <div id="editor" class="h-[450px] w-full"></div>
+                    </div>
+
+                    <!-- 裏側のtextarea -->
+                    <textarea id="answer_code" name="answer_code" class="hidden"></textarea>
+                </div>
+
+                <!-- 提出ボタン（ログイン画面等と共通の黒色スタイル） -->
+                <div class="text-right">
+                    <button type="submit"
+                        class="w-full sm:w-auto px-10 py-3 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md bg-neutral-950 hover:bg-neutral-800 focus:ring-2 focus:ring-offset-2 focus:ring-neutral-900  focus:outline-none cursor-pointer whitespace-nowrap">
+                        提出する
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- ページ下部：ナビゲーションボタン（最大IDを使った確実なガード） -->
+    <div class="mt-12 pt-6 border-t border-stone-200 flex justify-between items-center gap-4">
+
+        <!-- 前の問題へ -->
+        {% if row[0]|int <= 1 %} <span
+            class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-stone-400 border-2 border-stone-200 rounded-md bg-stone-50 cursor-not-allowed opacity-60">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+            前の問題へ
+            </span>
+            {% else %}
+            <a href="/question/{{ row[0]|int - 1 }}"
+                class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-stone-900 border-2 border-stone-900 rounded-md bg-white hover:bg-stone-50  transition-all duration-100">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                </svg>
+                前の問題へ
+            </a>
+            {% endif %}
+
+            <!-- 次の問題へ -->
+            {% if row[0]|int >= max_id|int %}
+            <span
+                class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-stone-400 border-2 border-stone-200 rounded-md bg-stone-50 cursor-not-allowed opacity-60">
+                次の問題へ
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+            </span>
+            {% else %}
+            <a href="/question/{{ row[0]|int + 1 }}"
+                class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-stone-900 border-2 border-stone-900 rounded-md bg-white hover:bg-stone-50   transition-all duration-100">
+                次の問題へ
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+            </a>
+            {% endif %}
+
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/loader.min.js"></script>
+<script>
+    require.config({
+        paths: {
+            vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs"
+        }
+    });
+
+    require(
+        ["vs/editor/editor.main"],
+        function () {
+            const storageKey = "answer_code_{{ row[0] }}";
+            const savedCode = localStorage.getItem(storageKey);
+
+            // プレースホルダーの初期文字を定義
+            const placeholderText = '# Pythonコードを記述してください\nprint("hello world")';
+
+            // 保存されたコードがない、または空っぽの場合は初期文字を入れる
+            const initialValue = (savedCode && savedCode.trim() !== "") ? savedCode : placeholderText;
+
+            const editor = monaco.editor.create(
+                document.getElementById("editor"),
+                {
+                    value: initialValue,
+                    language: "python",
+                    theme: "vs-dark",
+                    automaticLayout: true,
+                    // エディタの角丸に馴染むよう余白を少し調整
+                    padding: { top: 12, bottom: 12 }
+
+                }
+            );
+
+
+
+            editor.onDidChangeModelContent(function () {
+                localStorage.setItem(storageKey, editor.getValue());
+            });
+
+            document.querySelector("form").addEventListener("submit", function () {
+                document.getElementById("answer_code").value = editor.getValue();
+            });
+        }
+    );
+</script>
+{% endblock %}

@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@theme {
+    --font-app: "Noto Sans JP", sans-serif;
+    --font-title: "M PLUS Rounded 1c", sans-serif;
+}
+
+
+/* 全体フォント */
+
+body {
+    font-family: "Noto Sans JP", sans-serif;
+}

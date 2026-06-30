@@ -1,0 +1,25 @@
+# Environment
+.env
+
+
+# Python
+env/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Visual Studio
+.vs/
+*.user
+obj/
+
+# Node
+node_modules/
+
+# Build
+dist/
+build/
+
+# User uploads
+AILearningApp/AILearningApp/static/uploads/

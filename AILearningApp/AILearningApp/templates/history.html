@@ -1,0 +1,67 @@
+{% extends "layout_private.html" %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto my-10 px-4">
+
+    <!-- ページタイトル -->
+    <div class="mb-8 text-center md:text-left">
+        <h1 class="text-3xl font-extrabold text-stone-900 tracking-tight">回答履歴</h1>
+        <p class="text-sm text-stone-600 mt-2">これまでに提出した回答の記録と採点結果を確認できます。</p>
+    </div>
+
+    <!-- テーブル（くっきりボーダーと立体影のコンテナ） -->
+    <div class="bg-white border-2 border-stone-900 rounded-xl ">
+        <div class="overflow-x-auto max-h-[350px]">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-stone-100 border-b-2 border-stone-900">
+                        <th class="px-6 py-4 text-xs font-bold text-stone-900 uppercase tracking-wider w-20">ID</th>
+                        <th class="px-6 py-4 text-xs font-bold text-stone-900 uppercase tracking-wider">問題</th>
+                        <th class="px-6 py-4 text-xs font-bold text-stone-900 uppercase tracking-wider w-28">結果</th>
+                        <th class="px-6 py-4 text-xs font-bold text-stone-900 uppercase tracking-wider w-24">スコア</th>
+                        <th class="px-6 py-4 text-xs font-bold text-stone-900 uppercase tracking-wider w-44">日時</th>
+                        <th class="px-6 py-4 text-xs font-bold text-stone-900 uppercase tracking-wider w-24">詳細</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-stone-200 text-sm text-stone-800">
+                    {% for row in rows %}
+                    <tr class="hover:bg-lime-50/40 transition-colors duration-150">
+                        <!-- ID -->
+                        <td class="px-6 py-4 font-mono text-stone-500 font-medium">{{ row[0] }}</td>
+
+                        <!-- 問題タイトル -->
+                        <td class="px-6 py-4 font-semibold text-stone-900">
+                            {{ row[1] }}
+                        </td>
+
+                        <!-- 結果 -->
+                        <td class="px-6 py-4 font-bold">
+                            {{ row[2] }}
+                        </td>
+
+                        <!-- スコア -->
+                        <td class="px-6 py-4 font-mono font-bold text-stone-900">
+                            {{ row[3] }}点
+                        </td>
+
+                        <!-- 日時 -->
+                        <td class="px-6 py-4 text-stone-500 whitespace-nowrap text-xs font-medium">
+                            {{ row[4] }}
+                        </td>
+
+                        <!-- 詳細リンクボタン（クリックしやすいように少しボタン風に装飾） -->
+                        <td class="px-6 py-4">
+                            <a href="{{ url_for('history_detail', history_id=row[0]) }}"
+                                class="inline-flex items-center justify-center px-3 py-1.5 text-xs font-bold text-stone-900 border border-stone-900 rounded bg-white hover:bg-stone-50 shadow-[1px_1px_0px_0px_rgba(28,25,23,1)] hover:translate-x-[0.5px] hover:translate-y-[0.5px] hover:shadow-none transition-all duration-100 whitespace-nowrap">
+                                詳細を見る
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

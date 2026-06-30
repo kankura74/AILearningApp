@@ -1,0 +1,263 @@
+{% extends "layout_private.html" %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto my-10 px-4 space-y-10">
+
+    <!-- ページトップ：ヘッダー情報 -->
+    <div class="border-b-2 border-stone-900 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+            <h1 class="text-xs font-mono font-bold text-stone-500 uppercase tracking-wider mb-1">Submission Result</h1>
+            <h2 class="text-3xl font-extrabold text-stone-900 tracking-tight">回答結果</h2>
+        </div>
+        <div class="text-xs font-medium text-stone-500 font-mono whitespace-nowrap">
+            問題番号：No.{{ question[0] }}
+        </div>
+    </div>
+
+    <!-- 1・2セクション目：採点結果・問題内容・自分のコード -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+
+
+        <!-- 左側：採点結果 + 問題内容 -->
+        <div class="space-y-6">
+
+
+            <!-- 採点結果 -->
+            <div class="bg-white border-2 border-stone-900 rounded-xl p-6 md:p-6">
+
+                <h3 class="text-lg font-black text-stone-900">
+                    採点結果
+                </h3>
+
+
+                <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+
+                    <!-- 判定 -->
+                    <div>
+
+                        {% if result.result == "OK" %}
+
+                        <span
+                            class="inline-block text-xl md:text-2xl font-black text-emerald-600 border border-emerald-500 px-3 py-1 rounded-md">
+                            正解 (OK)
+                        </span>
+
+                        {% elif result.result == "NG" %}
+
+                        <span
+                            class="inline-block text-xl md:text-2xl font-black text-rose-600 border border-rose-500 px-3 py-1 rounded-md">
+                            不正解 (NG)
+                        </span>
+
+                        {% else %}
+
+                        <span
+                            class="inline-block text-xl md:text-2xl font-black text-amber-600 border border-amber-500 px-3 py-1 rounded-md">
+                            判定不能
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- スコア -->
+                    <div class="sm:border-l-2 border-stone-200 sm:pl-5">
+
+                        <p class="text-xs font-bold text-stone-500 mb-1">
+                            獲得スコア
+                        </p>
+
+
+                        <p class="text-3xl font-black text-stone-900 font-mono">
+
+                            {% if result.result == "UNKNOWN" %}
+                            --
+                            {% else %}
+                            {{ result.score }}
+                            {% endif %}
+
+                            <span class="text-sm font-bold">
+                                点
+                            </span>
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- 問題内容 -->
+            <div class="bg-white border-2 border-stone-900 rounded-xl p-5 md:p-6 space-y-5">
+
+
+                <h3 class="text-lg font-black text-stone-900">
+                    問題内容
+                </h3>
+
+
+                <!-- 問題情報 -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+
+                    <div>
+                        <span class="block text-xs font-bold text-stone-500">
+                            タイトル
+                        </span>
+
+                        <p class="font-bold text-stone-900">
+                            {{ question[1] }}
+                        </p>
+                    </div>
+
+
+                    <div>
+                        <span class="block text-xs font-bold text-stone-500">
+                            カテゴリ
+                        </span>
+
+                        <p class="font-bold text-stone-900">
+                            {{ question[3] }}
+                        </p>
+                    </div>
+
+
+                    <div>
+                        <span class="block text-xs font-bold text-stone-500">
+                            難易度
+                        </span>
+
+                        <p class="font-bold text-stone-900">
+                            {{ question[4] }}
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <!-- 問題文 -->
+                <div class="bg-stone-50 border border-stone-300 rounded-lg p-4">
+
+                    <p class="text-sm text-stone-800 leading-relaxed whitespace-pre-wrap">
+                        {{ question[2] }}
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+
+        <!-- 右側：自分のコード -->
+        <div class="bg-white border-2 border-stone-900 rounded-xl p-5 md:p-6 flex flex-col">
+
+
+            <h3 class="text-lg font-black text-stone-900 mb-4">
+                自分のコード
+            </h3>
+
+
+            <pre
+                class="flex-1 text-left bg-stone-950 text-stone-100 rounded-sm p-5 text-sm md:text-base leading-relaxed overflow-x-auto whitespace-pre-wrap font-mono shadow-inner"><code>{{ answer_code }}</code></pre>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- 3セクション目：AIからのフィードバックエリア -->
+    <div class="space-y-6 pt-4">
+        <h3 class="text-xl font-black text-stone-900 tracking-tight">AIからのフィードバック</h3>
+
+        {% if result.result != "UNKNOWN" %}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- 良かった点 -->
+            <div class="bg-white border-2 border-stone-900 rounded-xl p-5 ">
+                <h4 class="text-sm font-extrabold text-stone-900 flex items-center gap-1.5 mb-3">
+                    良かった点
+                </h4>
+                <p class="text-sm text-stone-700 leading-relaxed whitespace-pre-wrap">{{ result.good_points }}</p>
+            </div>
+
+            <!-- 間違いや不足点 -->
+            <div class="bg-white border-2 border-stone-900 rounded-xl p-5 ">
+                <h4 class="text-sm font-extrabold text-stone-900 flex items-center gap-1.5 mb-3">
+                    間違いや不足点
+                </h4>
+                <p class="text-sm text-stone-700 leading-relaxed whitespace-pre-wrap">{{ result.mistakes }}</p>
+            </div>
+
+            <!-- 改善例 -->
+            <div class="bg-white border-2 border-stone-900 rounded-xl p-5 ">
+                <h4 class="text-sm font-extrabold text-stone-900 flex items-center gap-1.5 mb-3">
+                    改善例
+                </h4>
+                <p class="text-sm text-stone-700 leading-relaxed whitespace-pre-wrap">{{ result.improvement }}</p>
+            </div>
+        </div>
+        {% else %}
+        <!-- 判定不能時のエラーメッセージ用表示 -->
+        <div class="bg-white border-2 border-stone-900 rounded-xl p-5 ">
+            <h4 class="text-sm font-extrabold text-stone-900 flex items-center gap-1.5 mb-3">
+                メッセージ
+            </h4>
+            <p class="text-sm text-stone-700 leading-relaxed whitespace-pre-wrap">{{ result.mistakes }}</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- ページフッター：ナビゲーションリンク -->
+    <div class="pt-8 border-t border-stone-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+
+        <!-- 左側：戻るボタン（問題詳細画面へ） -->
+        <a href="/question/{{ question[0] }}"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold text-stone-900 border-2 border-stone-900 rounded-md bg-white hover:bg-stone-50  transition-all duration-100">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+            問題に戻る
+        </a>
+
+        <!-- 右側：結果一覧＆次の問題ボタンのグループ -->
+        <div class="w-full sm:w-auto flex flex-col sm:flex-row items-center gap-4">
+            <!-- 結果一覧へ -->
+            <a href="{{ url_for('history_list') }}"
+                class="w-full sm:w-auto inline-flex items-center justify-center px-5 py-2.5 text-sm font-bold text-stone-600 hover:text-stone-900 hover:underline transition">
+                回答結果一覧へ
+            </a>
+
+            <!-- 次の問題へ（最大IDを活用して1つ前の問題画面と同様に安全ガード） -->
+            {% if question[0]|int >= max_id|int %}
+            <span
+                class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 text-sm font-bold text-stone-400 border-2 border-stone-200 rounded-md bg-stone-50 cursor-not-allowed opacity-60">
+                次の問題へ
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+            </span>
+            {% else %}
+            <a href="/question/{{ question[0]|int + 1 }}"
+                class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 text-sm font-bold text-white border-2 border-stone-900 rounded-md bg-neutral-950 hover:bg-neutral-800  transition-all duration-100">
+                次の問題へ
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+            </a>
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

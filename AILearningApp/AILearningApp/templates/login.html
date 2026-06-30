@@ -1,0 +1,129 @@
+{% extends "layout_public.html" %}
+
+{% block content %}
+
+<!-- メールの送信について -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+{% for category, message in messages %}
+
+{% if category == "success" %}
+
+<div id="toast"
+    class="rounded-sm fixed top-5 left-1/2 -translate-x-1/2 text-white text-sm bg-black shadow-sm px-4 py-2 z-50 opacity-90">
+
+    {{ message }}
+
+</div>
+
+{% endif %}
+
+
+
+
+{% endfor %}
+
+{% endwith %}
+
+<div class="max-w-md mx-auto my-10 bg--200 border-2 border-stone-900 rounded-xl p-6 md:p-8">
+
+    <!-- タイトル -->
+    <h1 class="text-2xl font-bold text-stone-900 mb-6 text-center">ログイン</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% for category, message in messages %}
+
+    {% if category == "error" %}
+
+    <p class="text-rose-500 text-sm mt-3 text-center">
+        {{ message }}
+    </p>
+
+    {% endif %}
+
+    {% endfor %}
+
+    {% endwith %}
+
+
+    <!-- フォーム -->
+    <form method="post" class="space-y-5" novalidate>
+
+        <!-- csrf対策 -->
+        {{ form.hidden_tag() }}
+
+        <!-- メールアドレス -->
+        <div class="flex flex-col gap-1.5">
+            <label class="text-sm font-medium text-stone-700">メールアドレス</label>
+            {{ form.email(
+            class="flex w-full px-3 py-2 text-sm bg-white border rounded-md border-stone-300 placeholder:text-stone-400
+            focus:border-stone-950 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone_950/20
+            transition duration-200",
+            placeholder="example@email.com"
+            ) }}
+
+            {% for error in form.email.errors %}
+            <p class="text-rose-500 text-sm">
+                {{ error }}
+            </p>
+            {% endfor %}
+
+        </div>
+
+        <!-- パスワード -->
+        <div class="flex flex-col gap-1.5">
+            <label class="text-sm font-medium text-stone-700">パスワード</label>
+            {{ form.password(
+            class="flex w-full px-3 py-2 text-sm bg-white border rounded-md border-stone-300 placeholder:text-stone-400
+            focus:border-stone-950 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone_950/20
+            transition duration-200",
+            placeholder="••••••••"
+            ) }}
+
+            {% for error in form.password.errors %}
+            <p class="text-rose-500 text-sm">
+                {{ error }}
+            </p>
+            {% endfor %}
+        </div>
+
+        <!-- ログインボタン -->
+        {{ form.submit(
+        class="w-full inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium tracking-wide text-white
+        transition-colors duration-200 rounded-md bg-neutral-950 hover:bg-neutral-900 focus:ring-2 focus:ring-offset-2
+        focus:ring-neutral-900 focus:outline-none mt-2"
+        ) }}
+
+    </form>
+
+    <!-- 下部リンクエリア -->
+    <div class="mt-8 pt-6 border-t border-stone-900 flex flex-col gap-3 text-center text-sm">
+        <a href="{{ url_for('register') }}"
+            class="font-medium text-stone-900 hover:text-stone-700 hover:underline transition">
+            新規会員登録はこちら
+        </a>
+
+        <a href="{{ url_for('password_reset') }}"
+            class="text-stone-500 hover:text-stone-700 hover:underline transition text-xs">
+            パスワードを忘れた場合はこちら
+        </a>
+    </div>
+
+</div>
+
+<script>
+
+    setTimeout(() => {
+
+        const toast = document.getElementById("toast");
+
+        if (toast) {
+            toast.remove();
+        }
+
+    }, 3000);
+
+</script>
+
+{% endblock %}

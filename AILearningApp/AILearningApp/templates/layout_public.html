@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+        {% block title %}
+        {% endblock %}
+    </title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+
+
+    <!-- Tailwind CSS -->
+    <link href="{{ url_for('static',
+              filename='css/tailwind.css') }}" rel="stylesheet">
+
+
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+
+<body class=" text-stone-800 min-h-screen flex flex-col">
+
+
+    <!-- Header -->
+
+    <header class=" bg-white border-b-2 ">
+
+        <div class="max-w-6xl mx-auto px-5 py-5 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center gap-4">
+                <!-- ロボットアイコン -->
+                <span class="w-14 h-14 rounded-full  flex items-center justify-center text-4xl flex-shrink-0">
+                    <i class="fa-solid fa-robot"></i>
+                </span>
+
+                <!-- テキストエリア -->
+                <a href="/" class="flex flex-col md:flex-row md:items-center gap-1 md:gap-4 group">
+                    <!-- メインタイトル（文字色をNeubrutalism調のstone-900に統一） -->
+                    <h1
+                        class="text-xl md:text-3xl font-extrabold text-stone-900 group-hover:text-stone-700 transition-colors tracking-tight">
+                        AIコードチェッカー
+                    </h1>
+                    <!-- 説明文-->
+                    <p class="text-xs md:text-sm font-medium text-stone-700 leading-tight">
+                        AIによる<br class="hidden md:inline">コード添削アプリ
+                    </p>
+                </a>
+            </div>
+
+
+
+
+
+
+
+            <!-- Header Buttons -->
+
+            <div class="flex items-center gap-3">
+
+
+                <!-- Register Button -->
+
+                <a href="/register"
+                    class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md bg-neutral-950 hover:bg-neutral-900 focus:ring-2 focus:ring-offset-2 focus:ring-neutral-900 focus:shadow-outline focus:outline-none">
+
+                    会員登録
+
+                </a>
+
+
+
+                <!-- Login Button -->
+
+                <a href="/login"
+                    class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium tracking-wide text-black transition-colors duration-200 rounded-md bg-white hover:bg-neutral-300 focus:ring-2 focus:ring-offset-2 focus:ring-neutral-900 focus:shadow-outline focus:outline-none">
+
+                    ログイン
+
+                </a>
+
+
+            </div>
+
+
+        </div>
+
+
+    </header>
+
+
+    <!-- Main -->
+
+    <main class="flex-1 max-w-5xl w-full mx-auto px-5 py-6">
+
+
+        {% block content %}
+        {% endblock %}
+
+
+    </main>
+
+
+
+
+
+    <!-- Footer -->
+    <footer class=" bg-white border-t-2 border-black py-5 text-center">
+
+
+        <p class="text-sm text-stone-700">
+
+            © AIコードチェッカー｜長谷川栞奈
+
+        </p>
+
+
+    </footer>
+
+
+
+</body>
+
+</html>
